@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>跨域测试</title>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  </head>
+  <body>
+    <button>获取json</button>
+  </body>
+  <script>
+    $('button').click(()=>{
+      $.ajax({
+        type:'POST',
+        url:'http://localhost:3000/first',
+        headers:{
+          "Content-Type":"http://localhost:3000/first"
+        },
+        success:(res)=>{
+          console.log(res)
+        }
+      })
+    })
+  </script>
+</html>
