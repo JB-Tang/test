@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <script src="../../js/jquery-3.2.1.min.js"></script>
+        <title>函数节流</title>
+        <style></style>
+    </head>
+    <body>
+        
+    </body>
+    <script>
+        $(function(){
+            console.log("页面初始化")
+        })
+        //方法一：时间戳方案
+        // function throttle(fn,wait){
+        //     var pre=Date.now();
+        //     return function(){
+        //         var context=this;
+        //         var args=arguments;
+        //         var now=Date.now();
+        //         if(now-pre>=wait){
+        //             fn.apply(context,args);
+        //             pre=Date.now();
+        //         }
+        //     }
+        // }
+
+        //方法二：定时器方案
+        // function throttle(fn,wait){
+        //     var timer=null;
+        //     return function(){
+        //         var context=this;
+        //         var args=arguments;
+        //         if(!timer){
+        //             timer=setTimeout(function(){
+        //                 fn.apply(context,args);
+        //                 timer=null;
+        //             },wait)
+        //         }
+        //     }
+        // }
+
+        // 方法三：定时器方案（反向）（个人赶脚是比较好的解法）
+        function throttle(fn,wait){
+            var timer=null;
+            return function(){
+                var context=this;
+                var args=arguments;
+                if(!timer){
+                    fn.apply(context,args);
+                    timer=setTimeout(()=>{
+                        timer=null;
+                    },wait)
+                }
+            }
+        }
+
+        //方法四
+        // function throttle(fn,wait){
+        //     let timer=undefined;
+        //     let lastCallTime=Date.now();
+        //     return function(){
+        //         const timeSinceLastCall=Date.now()-lastCallTime;
+        //         const shouldCall=timeSinceLastCall>=wait;
+        //         if(shouldCall){
+        //             const args=arguments;
+        //             timer=setTimeout((fn.apply(this,args),(timer=undefined)),wait);
+        //             lastCallTime=Date.now();
+        //         }
+        //     }
+        // }
+
+        function handle(){
+            console.log(arguments);
+        }
+
+        // window.addEventListener('mousemove',handle)
+        var mouseAction=new throttle(handle,1000)
+        window.addEventListener('mousemove',()=>{
+            mouseAction(1,2,3)
+        });
+        //注意，此处不可以直接使用window.addEventListener('mousemove',mouseAction(123))
+
+    </script>
+</html>
