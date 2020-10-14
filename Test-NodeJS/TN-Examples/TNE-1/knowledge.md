@@ -1,0 +1,29 @@
+文件操作
+1、内置的fs模块
+2、Buffer(数据块)
+    与字符串的区别
+3、Stream(数据流)
+    Stream基于事件机制工作，所有Stream的实例都继承于NodeJS提供的EventEmitter。
+4、File System(文件系统)
+    通过内置fs模块对文件进行操作，fs模块提供的API基本上可以分为以下三类：
+    文件属性读写：fs.stat,fs.chmod,fs.chown
+    文件内容读写：fs.readFile,fs.readdir,fs.writeFile,fs.mkdir
+    底层文件操作：fs.open,fs.read,fs.write,fs.close
+5、Path(路径)
+    NodeJS提供了path内置模块来简化路径相关操作，提升代码可读性。
+    path.normalize:将传入的路径转换为标准路径
+    path.join:将传入的多个路径拼接为标准路径
+    path.extname:当根据不同文件扩展名做不同操作时
+6、遍历目录
+    递归算法
+        陷阱：使用递归算法编写的代码虽然简洁，但由于每递归一次就产生一次函数调用，在需要优先考虑性能时，需要把递归算法转换为循环算法，以减少函数调用次数。
+    遍历算法
+        同步遍历
+        异步遍历
+7、文本编码
+    BOM的移除
+        BOM用于标记一个文本文件使用Unicode编码
+    GBK转UTF8
+        GBK编码不在NodeJS支持范围内。因此，需要借助iconv-lite这个三方包来转换编码。
+    单字节编码
+        对于无法预知需要读取的文件采用哪种编码，无法指定正确的编码，可以使用binary编码实现这个方法。
