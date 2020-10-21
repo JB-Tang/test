@@ -78,3 +78,49 @@ child.stderr.on('data',(data)=>{
 child.on('close',(code)=>{
     console.log('child process exited with code'+code);
 })
+
+
+/**
+ * 流程间通讯
+ */
+//方法一
+//parent.js
+var child=child_process.spawn('node',['child.js']);
+child.kill('SIGTERM');
+//child.js
+process.on('SIGTERM',()=>{
+    cleanUp();
+    process.exit(0);
+})
+//父流程通过.kill方法向子流程发送了SIGTERM信号
+//子流程监听process对象的SIGTERM事件响应信号
+//不要被.kill方法的名称迷惑了，该方法本质上是用来给流程发送信号的
+//方法二
+//parent.js
+var child=child_process.spawn('node',['child.js'],{stdio:[0,1,2,'ipc']});
+child.on('message',(msg)=>{
+    console.log(msg)
+})
+child.send({hello:'hello'})
+//child.js
+process.on('message',(msg)=>{
+    msg.hello=msg.hello.toUpperCase();
+    process.send(msg)
+})
+//父流程在创建子流程时，在options.stdio字段中通过ipc开启了一条IPC通到，之后就可以监听子流程对象message事件接收来自子流程的消息，并通过.send方法给子流程发送消息。
+//子流程可以在process对象上监听message事件接收来自父流程的消息，并通过.send方法向父流程发送消息
+//数据在传递过程中，会先在发送端使用JSON.stringify方法序列化，再在接收端使用JSON.parse方法反序列化
+
+/**
+ * 守护子流程
+ */
+function spawn(mainModule){
+    var worker=child_process.spawn('node',[mainModule]);
+    worker.on('exit',(code)=>{
+        if(code!==0){
+            spawn(mainModule)
+        }
+    })
+}
+spawn('worker.js')
+
