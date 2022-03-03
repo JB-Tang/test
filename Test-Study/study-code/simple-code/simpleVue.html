@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/vue.js"></script>
+    <title>Vue的简单学习</title>
+</head>
+<body>
+    <div id="root">
+        <school></school>
+    </div>
+</body>
+<script>
+Vue.prototype.x=99;
+const student={
+    template:`
+        <div>
+            <div>{{name}}</div>
+            <div>{{age}}</div>
+        </div>`,
+    data(){
+        return {
+            name:'学生姓名',
+            age:12
+        }
+    }
+}
+//定义一个school组件
+const school=Vue.extend({
+    template:`
+        <div>
+            <div>{{name}}</div>
+            <div>{{address}}</div>
+            <student></student>
+        </div>`,
+    data(){
+        return {
+            name:'这边是学校名称',
+            address:'这边是学校地址'
+        }
+    },
+    components:{
+        student
+    }
+})
+const vm=new Vue({
+    el:'#root',
+    data:{
+
+    },
+    components:{
+        school
+    }
+})
+</script>
+</html>
