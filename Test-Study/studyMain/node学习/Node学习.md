@@ -9,3 +9,9 @@
         npm config set registry=https://registry.npm.taobao.org/
         ```  
 2. 
+
+
+## 待整理知识点
+1. npm install(默认 ，--save, -D)
+2. npm init
+3. package.json文件
