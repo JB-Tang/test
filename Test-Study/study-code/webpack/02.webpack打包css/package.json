@@ -1,0 +1,28 @@
+{
+  "name": "webpack-test-css",
+  "version": "1.0.0",
+  "description": "测试一下css打包",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server",
+    "build": "webpack --config webpack.config.js"
+  },
+  "keywords": [
+    "webpack",
+    "css"
+  ],
+  "author": "jbTang",
+  "license": "ISC",
+  "dependencies": {
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.0",
+    "style-loader": "^3.3.1",
+    "webpack-dev-server": "^4.7.4"
+  }
+}
