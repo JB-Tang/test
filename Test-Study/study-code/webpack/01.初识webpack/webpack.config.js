@@ -7,6 +7,15 @@ module.exports = {
     filename: 'bundle.js', //打包后的文件
     path: resolve(__dirname, './dist')  //打包后的结果目录名
   },  //打包后的文件相关设置
+  module: {
+    rules: [{
+      test:/\.css$/,    //正则： 匹配所有的css文件
+      use: [
+        'style-loader', //将处理好的css通过style标签的形式添加到页面上
+        'css-loader',   //将css转化成webpack能够识别的数据
+      ]   //注意，每个load都有它的功能，webpack执行loader时从右向左，从下向上执行。
+    }]
+  },
   plugins: [
     new HTMLWebpackPlugin({
       template: './index.html',
