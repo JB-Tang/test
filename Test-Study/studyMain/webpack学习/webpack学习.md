@@ -1,5 +1,9 @@
 # webpack学习
 
+## 开发环境优化
+1. HMR
+    * 111
+
 ## 待整理知识点
 1. 基本使用（entry,output,module,plugins,mode）
 2. 热更新 devServer
