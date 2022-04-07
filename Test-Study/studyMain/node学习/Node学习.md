@@ -1,5 +1,5 @@
 # Node学习
-## 2022-03-07
+## 知识点
 1. 包镜像源
     * 代码示例
         ```javascript
@@ -45,6 +45,67 @@
     * 参考网址：
         * http://www.ruanyifeng.com/blog/2019/02/npx.html
         * https://www.jianshu.com/p/14c813bba544
+3. package.json文件
+    * 生成方式
+        * 手动编辑
+        * 使用命令行生成 npm init
+    * 属性介绍
+        * 必须属性
+            * name：姓名
+            * version：版本号
+        * 描述信息
+            * description：描述信息
+            * keywords：关键词
+            * author：作者
+            * contributors：贡献者
+            * homepage：主页
+            * repository：仓库
+            * bugs：BUG反馈地址
+        * 依赖配置
+            * dependencies：生产环境依赖
+                * 使用命令 npm install xxx | npm i xxx | npm install xxx --save时将包添加至生产环境
+            * devDependencies：开发环境依赖
+                * 使用命令 npm install xxx -D | npm i xxx -D | npm install xxx --save-D | npm install xxx --save-dev时将包添加至开发环境
+            * peerDependencies：兼容依赖
+            * optionalDependencies：不阻断安装依赖
+            * bundledDependencies：打包依赖
+            * engines：版本要求
+                * engines只是起到一个说明的作用，即使用户安装的版本不符合要求，也不影响依赖包的安装
+        * 脚本配置
+            * scripts：
+            * config：
+        * 文件&目录
+            * main：指定加载的入口文件，在browser和Node环境中都可以使用
+                * 如果我们将项目发布为npm包，那么当使用require导入该npm包时，会去main定义的路径的文件的module.exports属性。
+                * 如果不指定该字段，默认时项目根目录下的index.js，如果没有找到，就会报错。
+            * browser：定义npm包在browser环境下的入口文件
+                * 如果npm包只在web端使用，并且严禁在server端使用，使用browser来定义入口文件
+            * module：定义npm包的ESM规范的入口文件
+                * browser环境和node环境均可使用
+                * .js文件是使用commonJS规范的语法（require('xxx)）, .mjs是使用ESM规范的语法（import 'xxx'）
+            * bin：指定各个内部命令对应的可执行文件的位置
+            * files：当把npm包作为依赖包安装时需要说明的文件列表
+            * man：查看Linux中的指令帮助、配置文件帮助和编程帮助
+            * directories：规范项目的目录
+                * 这个属性实际上没有什么实际作用，但是不排除将来会有什么比较有意义的用处
+        * 发布配置
+            * private：防止意外的将私有库发布到npm服务器
+            * preferGlobal：当用户不把该模块安装为全局模块时，该属性设置为true的情况下就会显示警告
+            * publishConfig：配置会在模块发布时生效，用于设置发布时一些配置项的集合
+            * os：设置npm包可以在什么操作系统使用
+            * cpu：限制用户的安装环境
+            * license：指定软件的开源协议
+        * 第三方配置
+            * typings：用来指定 TypeScript 的入口文件
+            * eslintConfig：eslint 的配置可以写在单独的配置文件. eslintrc.json 中，也可以写在 package.json 文件的 eslintConfig 配置项中
+            * babel：用来指定 Babel 的编译配置
+            * unpkg：使用该字段可以让 npm 上所有的文件都开启 cdn 服务
+            * lint-staged：是一个在 Git 暂存文件上运行 linters 的工具，配置后每次修改一个文件即可给所有文件执行一次 lint 检查，通常配合 gitHooks 一起使用
+            * gitHooks：用来定义一个钩子，在提交（commit）之前执行 ESlint 检查。
+            * browserslist：用来告知支持哪些浏览器及版本
+    * 参考网址：
+        * https://www.cnblogs.com/zhilili/p/15707947.html
+        * 
 
 
 ## 待整理知识点
