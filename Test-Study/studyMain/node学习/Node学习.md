@@ -72,7 +72,83 @@
             * engines：版本要求
                 * engines只是起到一个说明的作用，即使用户安装的版本不符合要求，也不影响依赖包的安装
         * 脚本配置
-            * scripts：
+            * scripts：脚本命令 
+                * 代码示例
+                    ```javascript
+                        "scripts": {
+                            "build": "node build.js"
+                        }
+                    ```
+                    * 注：以上执行npm run build 就相当于执行 node build.js
+                * 这些定义在package.json里面的脚本，就称之为npm脚本
+                * 优点
+                    * 项目的相关脚本，可以集中在一个地方
+                    * 不同项目的脚本命令，只要功能相同，就可以有同样的对外接口。用户不需要怎么测试你的项目，只要运行npm run test即可
+                    * 可以利用npm提供的许多辅助功能
+                * 相关命令
+                    * npm run: 查看所有npm脚本命令
+                * 原理
+                    * 每当执行npm run，就会自动新建一个Shell，在这个Shell里面执行指定的脚本命令
+                    * 只要是Shell可以运行的命令，就就可以写在npm脚本里面
+                    * npm新建的Shell，会将当前目录node_modules/.bin子目录加入PATH变量，执行结束后，再将PATH变量恢复原样，所以，再node_modules/.bin子目录里面的所有脚本，都可以直接使用脚本名调用，而不用加上路径
+                    * 由于npm脚本的唯一要求是可以再Shell执行，因此它不一定是Node脚本，任何可执行文件都可以写在里面。
+                * 使用技巧
+                    * 通配符
+                        * 由于npm脚本是Shell脚本，所以可以使用Shell通配符
+                        * 如果要将通配符传入原始命令，防止被Shell转义，要将星号转义
+                        * 代码示例
+                            ```javascript
+                                "lint": "jshint *.js"
+                                "lint": "jshint **/*.js"
+                                "test": "tap test/\*.js"
+                            ```
+                    * 传参
+                        * 向npm脚本传入参数，要使用--标明
+                        * 代码示例
+                            ```javascript
+                                "lint": "jshint **.js"
+                                //传参调用
+                                npm run lint -- --reporter checkstyle > checkstyle.xml
+                                //该过程也可以直接在package.json文件中直接封装成一个命令
+                                "lint": "jshint **.js"
+                                "lint:checkstyle": "npm run lint -- --reporter checkstyle > checkstyle.xml"
+                            ```
+                    * 执行顺序
+                        * 如果npm脚本里面需要执行多个任务，那么需要明确执行顺序
+                        * 并行执行（平行执行）
+                            * 使用 & 符号
+                            * 代码示例
+                                ```javascript
+                                    npm run script1.js & npm run script2.js
+                                ```
+                        * 继发执行（一个任务完成后，才能执行下一个任务）
+                            * 使用 && 符号
+                            * 代码示例
+                                ```javascript
+                                    npm run script1.js && npm run script2.js
+                                ```
+                        * 注：这两个符号是Bash的功能。此外，还可以使用node的任务管理模块：
+                            * script-runner
+                            * npm-run-all
+                            * redrun
+                    * 简写
+                        * 四个常用的npm脚本有简写
+                            * npm start <---> npm run start
+                            * npm stop <---> npm run stop
+                            * npm test <---> npm run test
+                            * npm restart <---> npm run stop && npm run restart && npm run start的简写
+                        * npm restart是一个复合命令、实际会执行三个脚本命令：stop、restart、start，执行顺序如下
+                            * prerestart -> prestop -> stop -> poststop -> restart -> prestart -> start -> poststart -> postrestart
+                * 默认值
+                * 钩子
+                    * npm脚本有pre和post两个钩子。
+                    * 用户在执行npm run build的时候，会自动执行下面的顺序
+                        * npm run prebuild && npm run build && npm run postbuild
+                    * 通常在这两个钩子里面，完成一些准备工作和清理工作。
+                * 
+                            
+                * 
+
             * config：
         * 文件&目录
             * main：指定加载的入口文件，在browser和Node环境中都可以使用
@@ -105,8 +181,16 @@
             * browserslist：用来告知支持哪些浏览器及版本
     * 参考网址：
         * https://www.cnblogs.com/zhilili/p/15707947.html
-        * 
-
+        * https://www.ruanyifeng.com/blog/2016/10/npm_scripts.html
+4. 常用内置模块
+    * fs
+        * fs.readFile
+        * fs.writeFile
+    * path
+        * resolve
+    * url
+    * os
+    * http
 
 ## 待整理知识点
 1. npm install(默认, --save, -D)
