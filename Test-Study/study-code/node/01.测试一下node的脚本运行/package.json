@@ -1,0 +1,10 @@
+{
+  "name": "personal-test",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "test": "node .\\main.js",
+    "pretest": "node .\\main.js",
+    "posttest": "node .\\main.js"
+  }
+}

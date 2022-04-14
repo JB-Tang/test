@@ -140,16 +140,82 @@
                         * npm restart是一个复合命令、实际会执行三个脚本命令：stop、restart、start，执行顺序如下
                             * prerestart -> prestop -> stop -> poststop -> restart -> prestart -> start -> poststart -> postrestart
                 * 默认值
+                    * 一般来讲，npm脚本由用户提供，但是，npm对两个脚本提供了默认值。即这两个脚本不用定义，就可以直接使用
+                    * 默认脚本
+                        ```javascript
+                            "start": "node server.js",
+                            "install": "node-gyp rebuild"
+                        ```
+                    * 解析
+                        * npm run start的默认值是node server.js，前提是项目根目录下由server.js这个脚本
+                        * npm run install的默认值是node-gyp rebuild，前提是项目根目录下由binding,gyp文件
                 * 钩子
                     * npm脚本有pre和post两个钩子。
                     * 用户在执行npm run build的时候，会自动执行下面的顺序
                         * npm run prebuild && npm run build && npm run postbuild
                     * 通常在这两个钩子里面，完成一些准备工作和清理工作。
-                * 
-                            
-                * 
-
-            * config：
+                    * 自定义的脚本命令也可以加上pre和post钩子
+                        * 例如： myscript这个脚本命令，也有premyscript和postmyscript钩子
+                        * 注意：双重的pre和post是无效的，例如prepretest和postposttest是无效的
+                    * npm提供了一个npm_lifecycle_event变量，返回当前正在运行的脚本名称，比如pretest、test、posttest等等。
+                        * 在同一个脚本文件中，为不同的npm scripts命令编写代码
+                            ```javascript
+                                const TARGET = process.env.npm_lifecycle_event
+                                if(TARGET === 'test'){
+                                    console.log('Running the test task!')
+                                }
+                                if(TARGET === 'pretest'){
+                                    console.log('Running the pretest task!')
+                                }
+                                if(TARGET === 'posttest'){
+                                    console.log('Running the posttest task!')
+                                }
+                            ```
+                    * 注意：
+                        * prepublish钩子问题
+                            * npm4中：
+                                * prepublish不仅会在npm publish命令之前运行，还会在npm install (不带任何参数)命令之前运行。
+                                * 在npm4中引入一个新的钩子prepare，行为等同于prepublish
+                            * npm5中：
+                                * prepublish将只在npm publish命令之前运行
+                        * 钩子问题不仅仅在脚本中有，install,uninstall等也有
+                * 变量
+                    * npm脚本有个很强大的功能，就是可以使用npm的内部变量，通过npm_package_前缀，npm脚本可以拿到package.json里面的字段。
+                    * 获取方式
+                        * process.env.npm_package_xxx
+                            * 代码示例
+                                ```javascript
+                                    console.log('获取的项目名称：', process.env.npm_package_name)
+                                ```
+                        * 嵌套的package.json字段
+                            * 代码示例
+                                ```javascript
+                                    console.log('获取的嵌套内容：', process.env.npm_package_config_port)
+                                ```
+                    * 使用env命令可以列出所有环境变量
+                * 常用脚本示例
+                    ```javascript
+                        //删除目录
+                        "clean": "rimraf dist/*",
+                        //本地搭建一个HTTP服务
+                        "serve": "http-server -p 9090 dist/",
+                        //打开浏览器
+                        "open:dev": "opener http://localhost:9090",
+                        //实时刷新
+                        "livereload": "live-reload --port 9091 dist/",
+                        //构建HTML文件
+                        "build:html": "jade index.jade > dist/index.html",
+                        //只要CSS文件有变动，就重新执行构建
+                        "watch:css": "watch 'npm run build:css' assets/styles/",
+                        //只要HTML文件有变动，就重新执行构建
+                        "watch:html": "watch 'npm run build:html' assets/html",
+                        //部署到Amazon S3
+                        "deploy:prod": "s3-cli sync ./dist/ s3://example-com/prod-site/",
+                        //构建favicon
+                        "build:favicon": "node scripts/favicon.js",
+                    ```
+            * config：配置命令行环境变量
+                * 个人理解，创建一些环境变量给脚本使用
         * 文件&目录
             * main：指定加载的入口文件，在browser和Node环境中都可以使用
                 * 如果我们将项目发布为npm包，那么当使用require导入该npm包时，会去main定义的路径的文件的module.exports属性。
@@ -188,11 +254,14 @@
         * fs.writeFile
     * path
         * resolve
+        * join
+        * 
     * url
     * os
     * http
 
 ## 待整理知识点
 1. npm install(默认, --save, -D)
-2. npm init
-3. package.json文件
+2. 内置模块
+3. Common.js
+4. 

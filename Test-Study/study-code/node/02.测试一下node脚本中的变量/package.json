@@ -1,0 +1,18 @@
+{
+  "name": "personal-test",
+  "private": true,
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "xxx"
+  },
+  "config": {
+    "port": 8080,
+    "url": "xxx"
+  },
+  "scripts": {
+    "test": "node .\\main.js",
+    "pretest": "node .\\main.js",
+    "posttest": "node .\\main.js"
+  }
+}
