@@ -5,7 +5,7 @@
 
 ## 待整理内容
 1. express简介
-2. nodemod
+2. nodemon
 3. 路由
 
 
