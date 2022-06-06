@@ -5,3 +5,4 @@
 2. action
 3. mutation
 4. getter
+5. map
