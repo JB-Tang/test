@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试一下IndexedDB</title>
+</head>
+<body>
+  <button onclick="addData()">添加数据</button>
+  <button onclick="checkData()">查看数据</button>
+  <button onclick="checkManyData()">通过游标获取数据</button>
+  <button onclick="editData()">修改数据</button>
+  <button onclick="deleteData()">删除数据</button>
+</body>
+<script>
+
+//#region 
+window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB
+let userIndex = {
+  id: 0,
+  name: '',
+  age: 0,
+  sex: '',
+  addTime: ''
+}
+if (!window.indexedDB) {
+  console.log('你的浏览器不支持IndexedDB')
+} else {
+  let request = window.indexedDB.open('people', 1)
+  request.onupgradeneeded = (event) => {
+    //request === event.target
+    let db = event.target.result
+    // 接下来创建索引
+    let objectStore = db.createObjectStore('user', {keyPath: 'id', autoIncrement: true})
+    if (Object.prototype.toString.call(userIndex) === '[object Array]' && userIndex.length) {
+      for (let i in userIndex[0]) {
+        objectStore.createIndex(i, i, { unique: false })
+      }
+    } else if (Object.prototype.toString.call(userIndex) === '[object object]') {
+      for (let i in userIndex) {
+        objectStore.createIndex(i, i, { unique: false })
+      }
+    }
+  }
+
+  request.onerror = (error) => {
+    console.log('出现错误啦', error)
+  }
+}
+//#endregion
+
+function addData(){
+  let request = window.indexedDB.open('people', 1)
+  request.onsuccess = (event) => {
+    console.log(event)
+    let db = event.target.result
+
+    // 接下来开始添加数据
+    let transaction = db.transaction(['user'], 'readwrite')
+    let objectStore = transaction.objectStore('user')
+
+    objectStore.add({
+      id: Date.now(),
+      name: '测试一下',
+      age: 19,
+      sex: '男',
+      addTime: Date.now()
+    })
+  }
+}
+
+function checkData(){
+  let request = window.indexedDB.open('people', 1)
+  request.onsuccess = (event) => {
+    let db = event.target.result
+
+    let transaction = db.transaction(['user'], 'readwrite')
+    let objectStore = transaction.objectStore('user')
+
+    // 使用索引的方法
+    let request = objectStore.index('name').get(1)
+    // 不使用索引的方法
+    // let request = objectStore.get(1)
+
+    request.onsuccess = (e) => {
+      console.log('查询到的结果', e.target.result)
+    }
+  }
+}
+
+function checkManyData(){
+  let request = window.indexedDB.open('people', 1)
+  request.onsuccess = (event) => {
+    let db = event.target.result
+
+    let transaction = db.transaction(['user'], 'readwrite')
+    let objectStore = transaction.objectStore('user')
+
+    // 使用索引的方法
+    let request = objectStore.index('name').openCursor()
+    // 不使用索引的方法
+    // let request = objectStore.openCursor()
+    
+
+    request.onsuccess = (e) => {
+      let cursor = e.target.result
+      if (cursor) {
+        console.log('获取到的cursor:', cursor)
+        console.log(cursor.key, cursor.value);
+        cursor.continue()
+      }
+    }
+
+  }
+}
+
+function editData(){
+  let request = window.indexedDB.open('people', 1)
+  request.onsuccess = (event) => {
+    let db = event.target.result
+
+    let transaction = db.transaction(['user'], 'readwrite')
+    let objectStore = transaction.objectStore('user')
+
+    // 注：put不仅可以修改，也可以新增
+    let request = objectStore.put({
+      id: 2,
+      name: 'test',
+      age: 20,
+      sex: '女',
+      addTime: '2020-02-03'
+    })
+
+    request.onsuccess = (e) => {
+      console.log('保存的结果：', e.target.result)
+    }
+  }
+}
+
+function deleteData(){
+  let request = window.indexedDB.open('people', 1)
+  request.onsuccess = (event) => {
+    let db = event.target.result
+
+    let transaction = db.transaction(['user'], 'readwrite')
+    let objectStore = transaction.objectStore('user')
+
+    let request = objectStore.delete(2)
+
+    request.onsuccess = (e) => {
+      console.log('删除的结果：', e.target.result)
+    }
+  }
+}
+
+  
+</script>
+</html>

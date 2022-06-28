@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试一下页面的生命周期</title>
+</head>
+<body>
+  
+</body>
+<script>
+  window.onload = () => {
+    console.log('页面开始了', document.visibilityState)
+  }
+  document.onvisibilitychange = () => {
+    console.log('页面的可见性改变了', document.visibilityState)
+
+  }
+  window.onpageshow = (e) => {
+    console.log('页面展示', e, document.visibilityState)
+  }
+</script>
+</html>
