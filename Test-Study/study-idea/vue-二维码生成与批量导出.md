@@ -173,7 +173,5 @@
   * 批量下载的文件名要不同，否则重名文件会出现文件覆盖的情况
 
 ## 参考网址
-1. vueuse文档中useQRCode
-  * https://vueuse.org/integrations/useqrcode
-2. vue 中使用htmlcanvas生成多张图片，并转成压缩包，并下载到本地
-  * https://blog.csdn.net/qq_37481512/article/details/121637346
+1. [vueuse文档中useQRCode](https://vueuse.org/integrations/useqrcode)
+2. [vue 中使用htmlcanvas生成多张图片，并转成压缩包，并下载到本地](https://blog.csdn.net/qq_37481512/article/details/121637346)
