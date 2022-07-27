@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试一下将关键字代码高亮</title>
+</head>
+<style>
+  .light{
+    color: #ff6e6e;
+  }
+</style>
+<body>
+  <div id="textShow"></div>
+</body>
+<script>
+  window.onload = function(){
+    let testText = '本身就扩大v不仅可使的谁都不擦速度就会财富i首都机场v城市打工火车VS的v和是v把司机电话v就看撒从VS大大v不插手大家大数据和地方就是'
+    document.querySelector('#textShow').innerHTML = lightKeyword(testText, '大')
+  }
+  function lightKeyword(baseStr, keyword) {
+    return baseStr.replace(new RegExp(keyword, 'ig'), $1 => `<span class="light">${$1}</span>`)
+  }
+</script>
+</html>
