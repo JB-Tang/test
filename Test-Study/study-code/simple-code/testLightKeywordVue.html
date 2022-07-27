@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/vue.js"></script>
+    <title>测试vue中关键字高亮</title>
+</head>
+<style>
+  .highLight{
+    color: #ff6e6e;
+  }
+</style>
+<body>
+    <div id="root">
+      <div>
+        <span :class="index%2!==0?'highLight':''" v-for="(item,index) in textData" :key="index">{{item}}</span>
+      </div>
+    </div>
+</body>
+<script>
+const vm=new Vue({
+  el:'#root',
+  data:{
+    textData: []
+  },
+  created () {
+    console.log('111')
+    let testText = '本身就扩大v不仅可S大大v不插手大家大数据和地方就是'
+    this.textData = lightKeywordStrToArr(testText, '大')
+  }
+})
+function lightKeywordStrToArr (baseStr, keyword) {
+  let reg = new RegExp(keyword, 'ig')
+  let result = {}
+  let currentIndex = 0
+  let returnData = []
+  while((result = reg.exec(baseStr))) {
+    returnData.push(baseStr.slice(currentIndex, result.index))
+    returnData.push(result[0])
+    currentIndex = result.index + result[0].length
+  }
+  if(baseStr.length > currentIndex) {
+    returnData.push(baseStr.slice(currentIndex, baseStr.length))
+  }
+  return returnData
+}
+</script>
+</html>
