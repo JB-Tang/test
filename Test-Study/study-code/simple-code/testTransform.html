@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试transform变形效果</title>
+  <style>
+    .baseDiv{
+      width: 100px;
+      height: 100px;
+      background-color: #dfdfdf;
+    }
+    .translateDiv{
+      transform: translate(10px,20px);
+    }
+    .scaleDiv{
+      transform: scale(1.5, 1);
+    }
+    .rotateDiv{
+      transform: rotate(30deg);
+    }
+  </style>
+</head>
+<body>
+  <span>元素（基础）</span>
+  <div class="baseDiv"></div>
+  <span>位移</span>
+  <div class="baseDiv translateDiv"></div>
+  <span>缩放</span>
+  <div class="baseDiv scaleDiv"></div>
+  <span>旋转</span>
+  <div class="baseDiv rotateDiv"></div>
+</body>
+</html>
