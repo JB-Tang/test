@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试页面的可见性Api</title>
+</head>
+<body>
+  <div>111</div>
+  <a href="https://www.baidu.com">跳转至百度</a>
+</body>
+<script>
+  /**
+   * 页面卸载事件
+  */
+//  window.addEventListener('beforeunload', (e) => {
+//   e.returnValue = '这边是页面将要卸载的提示'
+//  })
+//  window.addEventListener('unload', (e) => {
+//   console.log('页面将要卸载')
+//  })
+ /**
+  * 缓存卸载事件
+ */
+// window.addEventListener('pageshow', (e) => {
+//   alert('页面展示的弹窗')
+// })
+// window.addEventListener('pagehide', (e) => {
+//   console.log('页面隐藏了')
+// })
+/**
+ * visiblitychange事件
+*/
+window.addEventListener('visibilitychange', () => {
+  console.log('页面是否可见', document.visibilityState)
+})
+
+</script>
+</html>
