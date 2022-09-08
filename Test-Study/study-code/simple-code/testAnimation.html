@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试一下animation动画</title>
+</head>
+<style>
+  @keyframes myAnimation1 {
+    from {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+    }
+    to {
+      width: 400px;
+      height: 400px;
+      background-color: yellow;
+    }
+  }
+  .mainDiv1{
+    animation: myAnimation1 5s infinite linear alternate-reverse forwards;
+  }
+</style>
+<body>
+  <div class="mainDiv1"></div>
+</body>
+</html>
