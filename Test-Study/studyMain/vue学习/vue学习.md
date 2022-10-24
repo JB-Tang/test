@@ -358,6 +358,7 @@
     * 非单文件组件
         * vm.$children
     * 单文件组件
+2. keep-alive
 
 
 
