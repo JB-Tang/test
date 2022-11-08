@@ -8,152 +8,127 @@
 </head>
 <body>
   <button onclick="addData()">添加数据</button>
-  <button onclick="checkData()">查看数据</button>
-  <button onclick="checkManyData()">通过游标获取数据</button>
-  <button onclick="editData()">修改数据</button>
-  <button onclick="deleteData()">删除数据</button>
+  <button onclick="readData()">读取数据</button>
+  <button onclick="updateData()">更新数据</button>
+  <button onclick="removeDate()">删除数据</button>
+  <button onclick="readDataByIndex()">使用索引读取数据</button>
+  <button onclick="readAll()">遍历数据</button>
 </body>
 <script>
 
-//#region 
 window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB
-let userIndex = {
-  id: 0,
-  name: '',
-  age: 0,
-  sex: '',
-  addTime: ''
-}
-if (!window.indexedDB) {
-  console.log('你的浏览器不支持IndexedDB')
-} else {
-  let request = window.indexedDB.open('people', 1)
-  request.onupgradeneeded = (event) => {
-    //request === event.target
-    let db = event.target.result
-    // 接下来创建索引
-    let objectStore = db.createObjectStore('user', {keyPath: 'id', autoIncrement: true})
-    if (Object.prototype.toString.call(userIndex) === '[object Array]' && userIndex.length) {
-      for (let i in userIndex[0]) {
-        objectStore.createIndex(i, i, { unique: false })
-      }
-    } else if (Object.prototype.toString.call(userIndex) === '[object object]') {
-      for (let i in userIndex) {
-        objectStore.createIndex(i, i, { unique: false })
-      }
-    }
-  }
 
-  request.onerror = (error) => {
-    console.log('出现错误啦', error)
-  }
-}
-//#endregion
+let databaseName = 'testIndexedDB'
+let version = 1
+let db = null
 
+let request = window.indexedDB.open(databaseName, version)
+// 数据库打开失败会触发
+request.onerror = function (error) {
+  console.log('IndexedDB打开失败', error)
+}
+// 数据库打开成功会触发
+request.onsuccess = function (res) {
+  console.log('IndexedDB打开成功', res)
+  db = res.target.result
+}
+// 数据库升级事件时会触发
+request.onupgradeneeded = function (res) {
+  console.log('IndexedDB升级成功', res)
+  db = res.target.result
+  // 新建表
+  let objectStore
+  if (!db.objectStoreNames.contains('person')) {
+    objectStore = db.createObjectStore('person', {keyPath: 'id'})
+  }
+  // 添加索引
+  objectStore.createIndex('name', 'name', {unique: false})
+}
+
+// 添加数据
 function addData(){
-  let request = window.indexedDB.open('people', 1)
-  request.onsuccess = (event) => {
-    console.log(event)
-    let db = event.target.result
-
-    // 接下来开始添加数据
-    let transaction = db.transaction(['user'], 'readwrite')
-    let objectStore = transaction.objectStore('user')
-
-    objectStore.add({
-      id: Date.now(),
-      name: '测试一下',
-      age: 19,
-      sex: '男',
-      addTime: Date.now()
-    })
+  let request = db.transaction(['person'], 'readwrite').objectStore('person').add({
+    id: Date.now(),
+    name: '测试一下',
+    age: 19,
+    sex: '男',
+    addTime: Date.now()
+  })
+  request.onsuccess = res => {
+    console.log('数据写入成功！')
+  }
+  request.onerror = error => {
+    console.log('数据写入失败：', error)
   }
 }
-
-function checkData(){
-  let request = window.indexedDB.open('people', 1)
-  request.onsuccess = (event) => {
-    let db = event.target.result
-
-    let transaction = db.transaction(['user'], 'readwrite')
-    let objectStore = transaction.objectStore('user')
-
-    // 使用索引的方法
-    let request = objectStore.index('name').get(1)
-    // 不使用索引的方法
-    // let request = objectStore.get(1)
-
-    request.onsuccess = (e) => {
-      console.log('查询到的结果', e.target.result)
+// 读取数据
+function readData() {
+  let request = db.transaction(['person']).objectStore('person').get(1667891711993)
+  request.onerror = error => {
+    console.log('数据读取失败：', error)
+  }
+  request.onsuccess = res => {
+    if (res.target.result) {
+      console.log('获取到的数据：', res.target.result)
+    } else {
+      console.log('未获取数据记录！')
     }
   }
 }
-
-function checkManyData(){
-  let request = window.indexedDB.open('people', 1)
-  request.onsuccess = (event) => {
-    let db = event.target.result
-
-    let transaction = db.transaction(['user'], 'readwrite')
-    let objectStore = transaction.objectStore('user')
-
-    // 使用索引的方法
-    let request = objectStore.index('name').openCursor()
-    // 不使用索引的方法
-    // let request = objectStore.openCursor()
-    
-
-    request.onsuccess = (e) => {
-      let cursor = e.target.result
-      if (cursor) {
-        console.log('获取到的cursor:', cursor)
-        console.log(cursor.key, cursor.value);
-        cursor.continue()
-      }
-    }
-
+// 更新数据
+function updateData() {
+  // 注：put不仅可以修改，也可以新增
+  let request = db.transaction(['person'], 'readwrite').objectStore('person').put({
+    id: 1667891711993,
+    name: '修改数据',
+    age: 19,
+    sex: '女',
+    addTime: Date.now()
+  })
+  request.onsuccess = res => {
+    console.log('数据更新成功！')
+  }
+  request.onerror = error => {
+    console.log('数据更新失败：', error)
   }
 }
-
-function editData(){
-  let request = window.indexedDB.open('people', 1)
-  request.onsuccess = (event) => {
-    let db = event.target.result
-
-    let transaction = db.transaction(['user'], 'readwrite')
-    let objectStore = transaction.objectStore('user')
-
-    // 注：put不仅可以修改，也可以新增
-    let request = objectStore.put({
-      id: 2,
-      name: 'test',
-      age: 20,
-      sex: '女',
-      addTime: '2020-02-03'
-    })
-
-    request.onsuccess = (e) => {
-      console.log('保存的结果：', e.target.result)
+// 删除数据
+function removeDate() {
+  let request = db.transaction(['person'], 'readwrite').objectStore('person').delete(1667891699384)
+  request.onsuccess = res => {
+    console.log('数据删除成功！')
+  }
+  request.onerror = error => {
+    console.log('数据删除失败：', error)
+  }
+}
+// 使用索引
+function readDataByIndex() {
+  let index = db.transaction(['person'], 'readonly').objectStore('person').index('name')
+  let request = index.get('修改数据')
+  request.onerror = error => {
+    console.log('数据索引读取失败：', error)
+  }
+  request.onsuccess = res => {
+    if (res.target.result) {
+      console.log('获取到的数据：', res.target.result)
+    } else {
+      console.log('未获取数据记录！')
     }
   }
 }
-
-function deleteData(){
-  let request = window.indexedDB.open('people', 1)
-  request.onsuccess = (event) => {
-    let db = event.target.result
-
-    let transaction = db.transaction(['user'], 'readwrite')
-    let objectStore = transaction.objectStore('user')
-
-    let request = objectStore.delete(2)
-
-    request.onsuccess = (e) => {
-      console.log('删除的结果：', e.target.result)
+// 遍历数据
+function readAll() {
+  let objectStore = db.transaction(['person']).objectStore('person')
+  let cursor = objectStore.openCursor()
+  cursor.onsuccess = res => {
+    if (res.target.result) {
+      console.log('遍历获取的数据：', res.target.result.value)
+      res.target.result.continue()
+    } else {
+      console.log('没有更多的数据了！')
     }
   }
 }
-
-  
 </script>
 </html>
