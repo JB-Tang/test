@@ -359,6 +359,17 @@
         * vm.$children
     * 单文件组件
 2. keep-alive
+    * 用法和作用
+        ```keep-alive```包裹动态组件component时，会缓存不活动的组件实例，而不是销毁他们，这样在组件切换过程中将状态保留在内存中，防止重复渲染DOM
+    * 缓存指定/排除
+        * 结合属性```include```和```exclude```可以明确指定缓存哪些组件或者排除缓存指定组件
+        * 注意点：vue3中结合vue-router时变化较大，之前keep-alive包裹router-view，现在相反
+    * 组件缓存后更新
+        * 组件缓存后更新可以使用activated或者beforeRouteEnter
+    * 原理
+        * 内部定义了一个map，缓存创建过的组件实例，它返回的渲染函数内部会查找内嵌的component组件对应组件的vnode，如果该组件在map中存在就直接返回它。
+        * 由于component的is属性是个响应式数据，因此只要它变化，keep-alive的render函数就会重新执行
+    * 参考网址：https://juejin.cn/post/7165675789885636616
 
 
 
