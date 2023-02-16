@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>postMessage验证父页面</title>
+</head>
+<body>
+  <textArea id="parentTextArea"></textArea>
+  <button onclick="sendMessageToChild()">发送</button>
+  <div id="childText"></div>
+  <iframe id="childIframe" src="http://127.0.0.1:5500/Test-Study/study-code/simple-code/testPostMessageChild.html" frameborder="1"></iframe>
+</body>
+<script>
+window.addEventListener('message', e => {
+  alert(e.data)
+})
+function sendMessageToChild() {
+  let text = document.querySelector('#parentTextArea').value
+  if (text) {
+    document.querySelector('#childIframe').contentWindow.postMessage(text, '*')
+  } else {
+    alert('请先在父页面输入框中输入内容')
+  }
+}
+</script>
+</html>

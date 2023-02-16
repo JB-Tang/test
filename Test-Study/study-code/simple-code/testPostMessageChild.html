@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>postMessage验证子页面</title>
+</head>
+<body>
+  <div>这是嵌套的子页面</div>
+  <button onclick="returnChildGet()">发送返回消息</button>
+  <div id="childOutText"></div>
+</body>
+<script>
+window.addEventListener('message', e => {
+  console.log('获取到的其他页面发送的消息', e)
+  document.querySelector('#childOutText').innerHTML += '<br>' + e.data
+})
+function returnChildGet() {
+  window.parent.postMessage('子页面确认接收到数据', '*')
+}
+</script>
+</html>
